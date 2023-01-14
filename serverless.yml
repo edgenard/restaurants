@@ -161,6 +161,8 @@ functions:
       - http:
           path: /restaurants/search
           method: post
+    environment:
+      restaurants_table: !Ref RestaurantsTable
 resources:
   Resources:
     RestaurantsTable:
