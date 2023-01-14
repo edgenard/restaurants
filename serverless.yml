@@ -145,7 +145,7 @@ functions:
     environment:
       restaurants_api: !Sub https://${ApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${sls:stage}/restaurants
       cognito_user_pool_id: !Ref CognitoUserPool
-      cognito_clint_id: !Ref WebCognitoPoolClient
+      cognito_client_id: !Ref WebCognitoUserPoolClient
   get-restaurants:
     handler: functions/get-restaurants.handler
     events:
