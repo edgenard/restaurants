@@ -58,9 +58,9 @@
 #    - include-me.js
 #    - include-me-dir/**
 
-functions:
-  hello:
-    handler: handler.hello
+# functions:
+#   hello:
+#     handler: handler.hello
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
@@ -130,3 +130,28 @@ functions:
     events:
       - http:
           path: /
+          method: get
+  get-restaurants:
+    handler: functions/get-restaurants.handler
+    events:
+      - http:
+          path: /restaurants
+          method: get
+    environment:
+      restaurants_table: !Ref RestaurantsTable
+
+resources:
+  Resources:
+    RestaurantsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: name
+            AttributeType: S # String
+        KeySchema:
+          - AttributeName: name
+            KeyType: HASH
+  Outputs:
+    RestaurantsTableName:
+      Value: !Ref RestaurantsTable
