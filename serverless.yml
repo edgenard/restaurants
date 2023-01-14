@@ -119,6 +119,8 @@ frameworkVersion: '3'
 
 custom:
   name: emmanuelgenard
+  export-env:
+    overwrite: true
 
 provider:
   name: aws
@@ -155,3 +157,7 @@ resources:
   Outputs:
     RestaurantsTableName:
       Value: !Ref RestaurantsTable
+
+
+plugins:
+  - serverless-export-env
