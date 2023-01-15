@@ -156,6 +156,9 @@ functions:
           path: /restaurants
           method: get
           authorizer: aws_iam
+          throttling:
+            maxRequestsPerSecond: 100
+            maxConcurrentRequests: 50
     environment:
       restaurants_table: !Ref RestaurantsTable
   search-restaurants:
@@ -164,6 +167,9 @@ functions:
       - http:
           path: /restaurants/search
           method: post
+          throttling:
+            maxRequestsPerSecond: 250
+            maxConcurrentRequests: 125
     environment:
       restaurants_table: !Ref RestaurantsTable
 resources:
