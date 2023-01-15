@@ -129,6 +129,8 @@ custom:
 provider:
   name: aws
   runtime: nodejs14.x
+  environment:
+    service_name: ${self:service}
   iam:
     role:
       statements:

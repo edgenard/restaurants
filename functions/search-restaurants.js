@@ -1,3 +1,6 @@
+const { metricScope, Unit } = require('aws-embedded-metrics')
+const axios = require('axios')
+
 const DocumentClient = require('aws-sdk/clients/dynamodb').DocumentClient
 const dynamodb = new DocumentClient()
 
@@ -18,7 +21,17 @@ const findRestaurantsByTheme = async (theme, count) => {
   return resp.Items
 }
 
-module.exports.handler = async (event, context) => {
+module.exports.handler = metricScope(metrics =>
+  async (event, context) => {
+  metrics.setNamespace(process.env.service_name)
+  metrics.putDimensions({Service: "Search-service"})
+
+  const start = Date.now()
+  const resp = await axios.get("https://emmanuelgenard.com")
+  const end = Date.now()
+  metrics.putMetric("latency", end - start, Unit.Milliseconds)
+    metrics.putMetric("count", resp.data.length, Unit.Count)
+
   const req = JSON.parse(event.body)
   const theme = req.theme
   const restaurants = await findRestaurantsByTheme(theme, defaultResults)
@@ -28,4 +41,4 @@ module.exports.handler = async (event, context) => {
   }
 
   return response
-}
+})

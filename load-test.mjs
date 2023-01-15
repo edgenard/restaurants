@@ -11,17 +11,17 @@ async function fetchResults() {
       "content-type": "application/json",
       "Referrer-Policy": "strict-origin-when-cross-origin"
     },
-    "body": "{\"theme\":\"candy\"}",
+    "body": "{\"theme\":\"netflix\"}",
     "method": "POST"
   })
   const body = await response.json()
   console.log(body);
 }
 
-for (let index = 0; index < 10; index++) {
+for (let index = 0; index < 1000; index++) {
 
     await fetchResults()
-    await sleep(10)
+    await sleep(0)
 }
 
 console.log("ALL DONE")
