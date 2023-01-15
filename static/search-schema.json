@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Search Schema",
+    "type": "object",
+    "properties": {
+        "theme": {
+            "enum": ["cartoon", "netflix"]
+        }
+    },
+    "required": ["theme"]
+}

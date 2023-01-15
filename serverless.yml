@@ -167,6 +167,9 @@ functions:
       - http:
           path: /restaurants/search
           method: post
+          request:
+            schema:
+              application/json: ${file(static/search-schema.json)}
           throttling:
             maxRequestsPerSecond: 250
             maxConcurrentRequests: 125
