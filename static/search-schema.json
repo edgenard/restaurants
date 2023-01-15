@@ -4,7 +4,7 @@
     "type": "object",
     "properties": {
         "theme": {
-            "enum": ["cartoon", "netflix"]
+            "enum": ["cartoon", "netflix", "movie", "true blood", "rick and morty", "house of cards", "harry potter", "toy story"]
         }
     },
     "required": ["theme"]
