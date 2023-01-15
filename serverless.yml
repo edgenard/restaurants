@@ -124,6 +124,7 @@ custom:
   apiGatewayThrottling:
     maxRequestsPerSecond: 1000
     maxConcurrentRequests: 500
+    metrics: true
 
 provider:
   name: aws
