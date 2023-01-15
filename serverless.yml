@@ -121,6 +121,9 @@ custom:
   name: emmanuelgenard
   export-env:
     overwrite: true
+  apiGatewayThrottling:
+    maxRequestsPerSecond: 1000
+    maxConcurrentRequests: 500
 
 provider:
   name: aws
@@ -242,3 +245,4 @@ resources:
 
 plugins:
   - serverless-export-env
+  - serverless-api-gateway-throttling
