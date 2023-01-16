@@ -1,4 +1,4 @@
-const fs = require("fs")
+const fs = require('fs')
 const Mustache = require('mustache')
 const http = require('axios')
 const aws4 = require('aws4')

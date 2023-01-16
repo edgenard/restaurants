@@ -134,13 +134,14 @@ custom:
           - protocol: email
             endpoint: errantwriter+cloudwatchalarm@gmail.com
       alarms:
-        - functionThrottles
+        - functionErrors
 
 provider:
   name: aws
   runtime: nodejs14.x
   environment:
     service_name: ${self:service}
+    AWS_PROFILE: production-ready-serverless
   apiGateway:
     metrics: true
   iam:
