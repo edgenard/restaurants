@@ -1,4 +1,4 @@
-const APP_ROOT = '../../';
+const APP_ROOT = '../../'
 const _ = require('lodash')
 
 const viaHandler = async (event, functionName) => {
@@ -15,10 +15,14 @@ const viaHandler = async (event, functionName) => {
     response.body = JSON.parse(response.body)
   }
   return response
-};
+}
 
-const we_invoke_get_index = () => viaHandler({}, 'get-index')
+const weInvokeGetIndex = () => viaHandler({}, 'get-index')
+const weInvokeGetRestaurants = () => viaHandler({}, 'get-restaurants')
+const weInvokeSearchRestaurants = () => viaHandler({}, 'search-restaurants')
 
 module.exports = {
-  we_invoke_get_index
-};
+  we_invoke_get_index: weInvokeGetIndex,
+  we_invoke_get_restaurants: weInvokeGetRestaurants,
+  we_invoke_search_restaurants: weInvokeSearchRestaurants
+}
