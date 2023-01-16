@@ -12,8 +12,8 @@ const findRestaurantsByTheme = async (theme, count) => {
   const req = {
     TableName: tableName,
     Limit: count,
-    FilterExpression: "contains(themes, :theme)",
-    ExpressionAttributeValues: { ":theme": theme }
+    FilterExpression: 'contains(themes, :theme)',
+    ExpressionAttributeValues: { ':theme': theme }
   }
 
   const resp = await dynamodb.scan(req).promise()
@@ -23,22 +23,22 @@ const findRestaurantsByTheme = async (theme, count) => {
 
 module.exports.handler = metricScope(metrics =>
   async (event, context) => {
-  metrics.setNamespace(process.env.service_name)
-  metrics.putDimensions({Service: "Search-service"})
+    metrics.setNamespace(process.env.service_name)
+    metrics.putDimensions({ Service: 'Search-service' })
 
-  const start = Date.now()
-  const resp = await axios.get("https://emmanuelgenard.com")
-  const end = Date.now()
-  metrics.putMetric("latency", end - start, Unit.Milliseconds)
-    metrics.putMetric("count", resp.data.length, Unit.Count)
+    const start = Date.now()
+    const resp = await axios.get('https://emmanuelgenard.com')
+    const end = Date.now()
+    metrics.putMetric('latency', end - start, Unit.Milliseconds)
+    metrics.putMetric('count', resp.data.length, Unit.Count)
 
-  const req = JSON.parse(event.body)
-  const theme = req.theme
-  const restaurants = await findRestaurantsByTheme(theme, defaultResults)
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify(restaurants)
-  }
+    const req = JSON.parse(event.body)
+    const theme = req.theme
+    const restaurants = await findRestaurantsByTheme(theme, defaultResults)
+    const response = {
+      statusCode: 200,
+      body: JSON.stringify(restaurants)
+    }
 
-  return response
-})
+    return response
+  })

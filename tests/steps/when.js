@@ -19,7 +19,12 @@ const viaHandler = async (event, functionName) => {
 
 const weInvokeGetIndex = () => viaHandler({}, 'get-index')
 const weInvokeGetRestaurants = () => viaHandler({}, 'get-restaurants')
-const weInvokeSearchRestaurants = () => viaHandler({}, 'search-restaurants')
+const weInvokeSearchRestaurants = (theme) => {
+  const event = {
+    body: JSON.stringify({ theme })
+  }
+  return viaHandler(event, 'search-restaurants')
+}
 
 module.exports = {
   we_invoke_get_index: weInvokeGetIndex,
