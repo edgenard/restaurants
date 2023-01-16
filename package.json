@@ -29,5 +29,8 @@
     "axios": "^1.2.2",
     "lodash": "^4.17.21",
     "mustache": "^4.2.0"
+  },
+  "standard": {
+    "env": [ "jest" ]
   }
 }
