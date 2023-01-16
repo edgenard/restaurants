@@ -187,7 +187,7 @@ functions:
               application/json: ${file(static/search-schema.json)}
           throttling:
             maxRequestsPerSecond: 10
-            maxConcurrentRequests: 25
+            maxConcurrentRequests: 10
     environment:
       restaurants_table: !Ref RestaurantsTable
 resources:
