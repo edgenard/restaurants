@@ -6,7 +6,7 @@ new Promise(resolve =>
   );
 
 const searchTerm = process.argv.slice(2)[0] || "cartoon"
-const timeOut = parseInt(process.argv.slice(2)[1]) || 100
+const timeOut = parseInt(process.argv.slice(2)[1]) || 10
 
 async function fetchResults(searchTerm) {
   const response = await fetch("https://zo5o8f92bh.execute-api.us-east-1.amazonaws.com/dev/restaurants/search", {
@@ -14,8 +14,7 @@ async function fetchResults(searchTerm) {
       "content-type": "application/json",
       "Referrer-Policy": "strict-origin-when-cross-origin"
     },
-    // "body": "{\"theme\":\"netflix\"}",
-    "body": `"{\"theme\":${searchTerm}\"}"`,
+    "body": `{"theme": "${searchTerm}"}`,
     "method": "POST"
   })
   const body = await response.json()
@@ -24,8 +23,8 @@ async function fetchResults(searchTerm) {
 
 for (let index = 0; index < 100; index++) {
 
-    fetchResults()
-    // await sleep(0)
+    await fetchResults(searchTerm)
+    await sleep(timeOut)
 }
 
 console.log("ALL DONE")
