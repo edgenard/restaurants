@@ -15,6 +15,7 @@
     "serverless": "^3.26.0",
     "serverless-api-gateway-throttling": "^2.0.2",
     "serverless-export-env": "github:arabold/serverless-export-env",
+    "serverless-plugin-aws-alerts": "^1.7.5",
     "standard": "^17.0.0"
   },
   "dependencies": {

@@ -125,6 +125,17 @@ custom:
     maxRequestsPerSecond: 1000
     maxConcurrentRequests: 500
     metrics: true
+  alerts:
+    stages:
+      - dev
+    topics:
+      alarm:
+        topic: ${self:service}-dev-alerts-alarm
+        notifications:
+          - protocol: email
+            endpoint: errantwriter+cloudwatchalarm@gmail.com
+      alarms:
+        - functionThrottles
 
 provider:
   name: aws
@@ -258,3 +269,4 @@ resources:
 plugins:
   - serverless-export-env
   - serverless-api-gateway-throttling
+  - serverless-plugin-aws-alerts
