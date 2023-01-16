@@ -124,7 +124,6 @@ custom:
   apiGatewayThrottling:
     maxRequestsPerSecond: 1000
     maxConcurrentRequests: 500
-    metrics: true
   alerts:
     stages:
       - dev
@@ -142,6 +141,8 @@ provider:
   runtime: nodejs14.x
   environment:
     service_name: ${self:service}
+  apiGateway:
+    metrics: true
   iam:
     role:
       statements:

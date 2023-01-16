@@ -5,22 +5,26 @@ new Promise(resolve =>
   setTimeout(() => {resolve(console.log("Sleeping...")) }, milliseconds)
   );
 
-async function fetchResults() {
+const searchTerm = process.argv.slice(2)[0] || "cartoon"
+const timeOut = parseInt(process.argv.slice(2)[1]) || 100
+
+async function fetchResults(searchTerm) {
   const response = await fetch("https://zo5o8f92bh.execute-api.us-east-1.amazonaws.com/dev/restaurants/search", {
     "headers": {
       "content-type": "application/json",
       "Referrer-Policy": "strict-origin-when-cross-origin"
     },
-    "body": "{\"theme\":\"netflix\"}",
+    // "body": "{\"theme\":\"netflix\"}",
+    "body": `"{\"theme\":${searchTerm}\"}"`,
     "method": "POST"
   })
   const body = await response.json()
   console.log(body);
 }
 
-for (let index = 0; index < 1000; index++) {
+for (let index = 0; index < 100; index++) {
 
-    await fetchResults()
+    fetchResults()
     // await sleep(0)
 }
 
