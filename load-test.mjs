@@ -21,7 +21,7 @@ async function fetchResults() {
 for (let index = 0; index < 1000; index++) {
 
     await fetchResults()
-    await sleep(0)
+    // await sleep(0)
 }
 
 console.log("ALL DONE")
