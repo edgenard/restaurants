@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "dotEnv": "sls export-env --all",
-    "test": "npm run dotEnv && jest",
+    "test": "npm run dotEnv && cross-env TEST_MODE=handler jest",
     "seed": "node seed-restaurants.js",
-    "test:ci": "npm run seed && npm run test"
+    "test:ci": "npm run seed && npm run test",
+    "acceptance": "npm run dotEnv && cross-env TEST_MODE=http jest"
   },
   "keywords": [],
   "author": "",
