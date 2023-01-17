@@ -11,7 +11,7 @@ describe("When we invoke the POST /restaurants/search endpoint with theme 'carto
   })
 
   afterAll(async () => {
-    teardown.an_authenticated_user(user)
+    await teardown.an_authenticated_user(user)
   })
 
   it('Should return an array of 4 restaurants', async () => {
