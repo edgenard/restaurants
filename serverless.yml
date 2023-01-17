@@ -184,12 +184,16 @@ functions:
       - http:
           path: /restaurants/search
           method: post
+          authorizer:
+            name: CognitoAuthorizer
+            type: COGNITO_USER_POOLS
+            arn: !GetAtt CognitoUserPool.Arn
           request:
             schemas:
               application/json: ${file(static/search-schema.json)}
           throttling:
-            maxRequestsPerSecond: 10
-            maxConcurrentRequests: 10
+            maxRequestsPerSecond: 100
+            maxConcurrentRequests: 50
     environment:
       restaurants_table: !Ref RestaurantsTable
 resources:
