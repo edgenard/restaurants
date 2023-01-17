@@ -23,7 +23,7 @@ const findRestaurantsByTheme = async (theme, count) => {
 
 module.exports.handler = metricScope(metrics =>
   async (event, context) => {
-    metrics.setNamespace(process.env.service_name)
+    metrics.setNamespace(process.env.serviceName)
     metrics.putDimensions({ Service: 'Search-service' })
 
     const start = Date.now()
