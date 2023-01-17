@@ -143,6 +143,7 @@ provider:
     service_name: ${self:service}
     AWS_PROFILE: production-ready-serverless
     rest_api_url: !Sub https://${ApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${sls:stage}
+    cognito_server_client_id: !Ref ServerCognitoUserPoolClient
   apiGateway:
     metrics: true
   iam:
@@ -260,6 +261,7 @@ resources:
         ExplicitAuthFlows:
           - ALLOW_ADMIN_USER_PASSWORD_AUTH
           - ALLOW_REFRESH_TOKEN_AUTH
+        PreventUserExistenceErrors: ENABLED
   Outputs:
     RestaurantsTableName:
       Value: !Ref RestaurantsTable

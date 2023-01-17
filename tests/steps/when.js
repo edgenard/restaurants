@@ -90,15 +90,14 @@ const weInvokeGetRestaurants = async () => {
       throw new Error(`unsupported mode: ${mode}`)
   }
 }
-const weInvokeSearchRestaurants = async (theme) => {
-  const event = {
-    body: JSON.stringify({ theme })
-  }
+const weInvokeSearchRestaurants = async (theme, user) => {
+  const body = JSON.stringify({ theme })
+  const auth = user.idToken
   switch (mode) {
     case 'handler':
-      return await viaHandler(event, 'search-restaurants')
+      return await viaHandler({ body }, 'search-restaurants')
     case 'http':
-      return await viaHttp('restaurants/search', 'POST', { body: event, auth: 'something' })
+      return await viaHttp('restaurants/search', 'POST', { body, auth })
     default:
       throw new Error(`unsupported mode: ${mode}`)
   }
