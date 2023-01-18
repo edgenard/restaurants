@@ -274,6 +274,12 @@ resources:
         Type: String
         Name: /${self:service}/${sls:stage}/serviceUrl
         Value: !Sub https://${ApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${sls:stage}
+    DatabaseTableParamer:
+      Type: AWS::SSM::Parameter
+      Properties:
+        Type: string
+        Value: !Ref RestaurantsTable
+        Name: /${self:service}/${sls:stage}/restaurants_table
   Outputs:
     RestaurantsTableName:
       Value: !Ref RestaurantsTable
