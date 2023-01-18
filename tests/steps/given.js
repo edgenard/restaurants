@@ -73,7 +73,6 @@ const auAuthenticatedUser = async () => {
 */
 const dynamicConfigurations = async () => {
   const ssm = new AWS.SSM({ region: 'us-east-1' })
-  // const parameterPath = '/workshop-emmanuelgenard/dev/'
   const parameterPath = `/${process.env.serviceName}/${process.env.stage}/`
   const params = await ssm.getParametersByPath({ Path: parameterPath, Recursive: true }).promise()
 
