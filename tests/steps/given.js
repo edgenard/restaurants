@@ -72,7 +72,7 @@ const auAuthenticatedUser = async () => {
   returns { function-naame/config: value}
 */
 const dynamicConfigurations = async () => {
-  const ssm = new AWS.SSM({ region: 'us-east-1' })
+  const ssm = new AWS.SSM()
   const parameterPath = `/${process.env.serviceName}/${process.env.stage}/`
   const params = await ssm.getParametersByPath({ Path: parameterPath, Recursive: true }).promise()
 
