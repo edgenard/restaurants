@@ -33,6 +33,9 @@ jobs:
       - name: npm ci
         run: npm ci
 
+      - name: export environment variables
+        run : npm run dotEnv
+
       - name: seed db
         run: npm run seed
 
