@@ -268,6 +268,12 @@ resources:
           - ALLOW_ADMIN_USER_PASSWORD_AUTH
           - ALLOW_REFRESH_TOKEN_AUTH
         PreventUserExistenceErrors: ENABLED
+    ServiceUrlParameter:
+      Type: AWS::SSM::Parameter
+      Properties:
+        Type: String
+        Name: /${self:service}/${sls:stage}/serviceUrl
+        Value: !Sub https://${ApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${sls:stage}
   Outputs:
     RestaurantsTableName:
       Value: !Ref RestaurantsTable
