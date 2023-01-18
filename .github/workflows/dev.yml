@@ -30,12 +30,11 @@ jobs:
           role-to-assume: arn:aws:iam::584725262483:role/GithubActions
           role-session-name: GithubActionsSession
 
-      - name: install dependencies
-        run : npm install
-      - name: seed db
-        run: npm run seed
       - name: npm ci
         run: npm ci
+
+      - name: seed db
+        run: npm run seed
 
       - name: run integration test
         run: npm run test
