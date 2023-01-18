@@ -11,7 +11,10 @@
         "--runInBand"
       ],
       "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen"
+      "internalConsoleOptions": "neverOpen",
+      "env": {
+        "TEST_MODE": "http"
+      }
     }
   ]
 }

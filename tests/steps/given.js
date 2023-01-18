@@ -79,7 +79,13 @@ const dynamicConfigurations = async () => {
 
   return params.Parameters.reduce((acc, el) => {
     const key = el.Name.replace(parameterPath, '')
-    acc[key] = JSON.parse(el.Value)
+    let value
+    try {
+      value = JSON.parse(el.Value)
+    } catch (error) {
+      value = el.Value
+    }
+    acc[key] = value
     return acc
   }, {})
 }
