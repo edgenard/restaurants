@@ -277,7 +277,7 @@ resources:
     DatabaseTableParamer:
       Type: AWS::SSM::Parameter
       Properties:
-        Type: string
+        Type: String
         Value: !Ref RestaurantsTable
         Name: /${self:service}/${sls:stage}/restaurants_table
   Outputs:
