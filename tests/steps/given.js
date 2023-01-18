@@ -68,6 +68,23 @@ const auAuthenticatedUser = async () => {
   }
 }
 
+/*
+  returns { function-naame/config: value}
+*/
+const dynamicConfigurations = async () => {
+  const ssm = new AWS.SSM({ region: 'us-east-1' })
+  // const parameterPath = '/workshop-emmanuelgenard/dev/'
+  const parameterPath = `/${process.env.serviceName}/${process.env.stage}/`
+  const params = await ssm.getParametersByPath({ Path: parameterPath, Recursive: true }).promise()
+
+  return params.Parameters.reduce((acc, el) => {
+    const key = el.Name.replace(parameterPath, '')
+    acc[key] = JSON.parse(el.Value)
+    return acc
+  }, {})
+}
+
 module.exports = {
-  an_authenticated_user: auAuthenticatedUser
+  an_authenticated_user: auAuthenticatedUser,
+  dynamicConfigurations
 }
