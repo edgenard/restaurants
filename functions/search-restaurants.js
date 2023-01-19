@@ -1,13 +1,14 @@
-const { metricScope, Unit } = require('aws-embedded-metrics')
-const axios = require('axios')
+// const { metricScope, Unit } = require('aws-embedded-metrics')
+// const axios = require('axios')
+const middy = require('@middy/core')
+const ssm = require('@middy/ssm')
 
 const DocumentClient = require('aws-sdk/clients/dynamodb').DocumentClient
 const dynamodb = new DocumentClient()
 
-const defaultResults = process.env.defaultResults || 8
-const tableName = process.env.restaurants_table
+const { serviceName, stage } = process.env
 
-const findRestaurantsByTheme = async (theme, count) => {
+const findRestaurantsByTheme = async (theme, count, tableName) => {
   console.log(`finding (up to ${count}) restaurants with the theme ${theme}...`)
   const req = {
     TableName: tableName,
@@ -21,24 +22,52 @@ const findRestaurantsByTheme = async (theme, count) => {
   return resp.Items
 }
 
-module.exports.handler = metricScope(metrics =>
+module.exports.handler = middy(
   async (event, context) => {
-    metrics.setNamespace(process.env.serviceName)
-    metrics.putDimensions({ Service: 'Search-service' })
-
-    const start = Date.now()
-    const resp = await axios.get('https://emmanuelgenard.com')
-    const end = Date.now()
-    metrics.putMetric('latency', end - start, Unit.Milliseconds)
-    metrics.putMetric('count', resp.data.length, Unit.Count)
-
     const req = JSON.parse(event.body)
     const theme = req.theme
-    const restaurants = await findRestaurantsByTheme(theme, defaultResults)
+    const defaultResults = context.config.defaultResults
+    const tableName = context.tableName
+
+    const restaurants = await findRestaurantsByTheme(theme, defaultResults, tableName)
     const response = {
       statusCode: 200,
       body: JSON.stringify(restaurants)
     }
 
+    console.log('Secret String', context.secretString)
+
     return response
-  })
+  }
+).use(ssm({
+  cache: true,
+  cacheExpiry: 1 * 60 * 1000, // 1 mins
+  setToContext: true,
+  fetchData: {
+    config: `/${serviceName}/${stage}/search-restaurants/config`,
+    tableName: `/${serviceName}/${stage}/restaurants_table`,
+    secretString: `/${serviceName}/${stage}/search-restaurants/secretString`
+  }
+}))
+
+// module.exports.handler = metricScope(metrics =>
+//   async (event, context) => {
+//     metrics.setNamespace(process.env.serviceName)
+//     metrics.putDimensions({ Service: 'Search-service' })
+
+//     const start = Date.now()
+//     const resp = await axios.get('https://emmanuelgenard.com')
+//     const end = Date.now()
+//     metrics.putMetric('latency', end - start, Unit.Milliseconds)
+//     metrics.putMetric('count', resp.data.length, Unit.Count)
+
+//     const req = JSON.parse(event.body)
+//     const theme = req.theme
+//     const restaurants = await findRestaurantsByTheme(theme, defaultResults)
+//     const response = {
+//       statusCode: 200,
+//       body: JSON.stringify(restaurants)
+//     }
+
+//     return response
+//   })
