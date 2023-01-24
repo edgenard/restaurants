@@ -13,7 +13,7 @@
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "env": {
-        "TEST_MODE": "http"
+        "TEST_MODE": "handler"
       }
     }
   ]
