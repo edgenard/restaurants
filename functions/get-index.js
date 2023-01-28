@@ -15,7 +15,7 @@ const template = fs.readFileSync('static/index.html', 'utf-8')
 
 const getRestaurants = async () => {
   console.log(`loading restaurants from ${restaurantsApiRoot}...`)
-  const url = URL.parse(restaurantsApiRoot)
+  const url = new URL.URL(restaurantsApiRoot)
   const opts = {
     host: url.hostname,
     path: url.pathname
