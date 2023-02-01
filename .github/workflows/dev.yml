@@ -33,23 +33,26 @@ jobs:
       - name: npm ci
         run: npm ci
 
-      - name: export environment variables
-        run : npm run dotEnv
+      # this provisions a temporary stage called 'ci-dev'
+      - name: deploy temp environment
+        run: npx sls deploy -s ci-dev
 
-      - name: seed db
-        run: npm run seed
+      # this generates the .env file for the 'ci-dev' stage
+      - name: export env
+        run: npx sls export-env --all -s ci-dev
 
+      # this runs the integration test against the 'ci-dev' stage
       - name: run integration test
-        run: npm run test
+        run: npx cross-env TEST_MODE=handler jest
 
-      - name: deploy to test environment
-        run: npx sls deploy -s ci-environment
-
+      # this runs the acceptance test against the 'ci-dev' stage
       - name: run acceptance tests
-        run: npm run acceptance
+        run: npx cross-env TEST_MODE=http jest
 
-      - name: delete test environment
-        run: npx sls remove -s ci-environment
+      # delete the 'ci-dev' stage
+      - name: destroy temp environment
+        run: npx sls remove -s ci-dev
 
+      # deploy to the ACTUAL dev stage
       - name: deploy to dev
         run: npx sls deploy
