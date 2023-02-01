@@ -162,10 +162,10 @@ provider:
             # - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${self:service}/${sls:stage}/get-restaurants/config
             # - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${self:service}/${sls:stage}/search-restaurants/config
             # - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${self:service}/${sls:stage}/restaurants_table
-            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${self:service}/${sls:stage}/*
+            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${self:service}/dev/*
         - Effect: Allow
           Action: kms:Decrypt
-          Resource: ${ssm:/${self:service}/${sls:stage}/kmsArn}
+          Resource: ${ssm:/${self:service}/dev/kmsArn}
 
 functions:
   get-index:
