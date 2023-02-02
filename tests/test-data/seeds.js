@@ -75,10 +75,6 @@ class SeedTestData extends NodeEnvironment {
   }
 
   async setup () {
-    if (process.env.seeded) {
-      console.log('already seeded')
-      return
-    }
     const { UnprocessedItems = [] } = await dynamodb.batchWrite(req(putReqs)).promise().catch(error => {
       console.log('Error Writing to DynamoDB')
       console.error(error)
