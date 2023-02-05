@@ -41,7 +41,7 @@ const restaurants = [
     themes: ['cartoon', 'rick and morty']
   },
   {
-    name: 'Test -Don Cuco',
+    name: 'Test - Don Cuco',
     image: 'https://d2qt42rcwzspd6.cloudfront.net/manning/don%20cuco.png',
     themes: ['cartoon', 'rick and morty']
   }
