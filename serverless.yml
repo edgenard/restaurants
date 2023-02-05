@@ -146,7 +146,6 @@ provider:
     AWS_PROFILE: production-ready-serverless
     rest_api_url: !Sub https://${ApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${sls:stage}
     cognito_server_client_id: !Ref ServerCognitoUserPoolClient
-    restaurant_notification_topic_name: !Ref RestaurantNotificationTopicName
   apiGateway:
     metrics: true
   iam:
