@@ -28,7 +28,7 @@ const respondFrom = async (httpRes) => ({
 })
 
 const signHttpRequest = (url) => {
-  const urlData = URL.parse(url)
+  const urlData = new URL.URL(url)
   const opts = {
     host: urlData.hostname,
     path: urlData.pathname
@@ -103,8 +103,22 @@ const weInvokeSearchRestaurants = async (theme, user) => {
   }
 }
 
+const weInvokePlaceOrder = async (user, restaurantName) => {
+  const body = JSON.stringify({ restaurantName })
+  const auth = user.idToken
+  switch (mode) {
+    case 'handler':
+      return await viaHandler({ body }, 'place-order')
+    case 'http':
+      return await viaHttp('orders', 'POST', { body, auth })
+    default:
+      throw new Error(`unsupported mode: ${mode}`)
+  }
+}
+
 module.exports = {
   we_invoke_get_index: weInvokeGetIndex,
   we_invoke_get_restaurants: weInvokeGetRestaurants,
-  we_invoke_search_restaurants: weInvokeSearchRestaurants
+  we_invoke_search_restaurants: weInvokeSearchRestaurants,
+  we_invoke_place_order: weInvokePlaceOrder
 }

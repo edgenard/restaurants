@@ -167,6 +167,9 @@ provider:
         - Effect: Allow
           Action: kms:Decrypt
           Resource: ${ssm:/${self:service}/${param:paramStore, sls:stage}/kmsArn}
+        - Effect: Allow
+          Action: events:PutEvents
+          Resource: !GetAtt EventBus.Arn
 
 functions:
   get-index:
@@ -209,6 +212,18 @@ functions:
             maxConcurrentRequests: 50
     environment:
       restaurants_table: !Ref RestaurantsTable
+  place-order:
+    handler: functions/place-order.handler
+    events:
+      - http:
+          path: /orders
+          method: post
+          authorizer:
+            name: CognitoAuthorizer
+            type: COGNITO_USER_POOLS
+            arn: !GetAtt CognitoUserPool.Arn
+    environment:
+      bus_name: !Ref EventBus
 resources:
   Resources:
     RestaurantsTable:
@@ -286,6 +301,10 @@ resources:
         Type: String
         Value: !Ref RestaurantsTable
         Name: /${self:service}/${sls:stage}/restaurants_table
+    EventBus:
+      Type: AWS::Events::EventBus
+      Properties:
+        Name: order_events_${sls:stage}_${self:custom.name}
   Outputs:
     RestaurantsTableName:
       Value: !Ref RestaurantsTable
@@ -297,6 +316,8 @@ resources:
       Value: !Ref WebCognitoUserPoolClient
     CognitoUserPoolServerClientId:
       Value: !Ref ServerCognitoUserPoolClient
+    EventBusName:
+      Value: !Ref EventBus
 
 
 plugins:
