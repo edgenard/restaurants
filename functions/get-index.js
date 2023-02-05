@@ -8,12 +8,14 @@ const restaurantsApiRoot = process.env.restaurants_api
 const cognitoUserPoolId = process.env.cognito_user_pool_id
 const cognitoClientId = process.env.cognito_client_id
 const awsRegion = process.env.AWS_REGION
+const paramStore = process.env.paramStore
 
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 const template = fs.readFileSync('static/index.html', 'utf-8')
 
 const getRestaurants = async () => {
+  console.log('ParamStore is:', paramStore)
   console.log(`loading restaurants from ${restaurantsApiRoot}...`)
   const url = new URL.URL(restaurantsApiRoot)
   const opts = {

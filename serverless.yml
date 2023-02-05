@@ -129,7 +129,7 @@ custom:
       - dev
     topics:
       alarm:
-        topic: ${self:service}-dev-alerts-alarm
+        topic: ${self:service}-${sls:stage}-alerts-alarm
         notifications:
           - protocol: email
             endpoint: errantwriter+cloudwatchalarm@gmail.com
@@ -142,6 +142,7 @@ provider:
   environment:
     serviceName: ${self:service}
     stage: ${sls:stage}
+    paramStore: ${param:paramStore, sls:stage}
     AWS_PROFILE: production-ready-serverless
     rest_api_url: !Sub https://${ApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${sls:stage}
     cognito_server_client_id: !Ref ServerCognitoUserPoolClient
@@ -161,11 +162,11 @@ provider:
           Resource:
             # - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${self:service}/${sls:stage}/get-restaurants/config
             # - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${self:service}/${sls:stage}/search-restaurants/config
-            # - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${self:service}/${sls:stage}/restaurants_table
-            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${self:service}/dev/*
+            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${self:service}/${sls:stage}/restaurants_table
+            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${self:service}/${param:paramStore, sls:stage}/*
         - Effect: Allow
           Action: kms:Decrypt
-          Resource: ${ssm:/${self:service}/dev/kmsArn}
+          Resource: ${ssm:/${self:service}/${param:paramStore, sls:stage}/kmsArn}
 
 functions:
   get-index:

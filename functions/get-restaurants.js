@@ -2,9 +2,10 @@ const DocumentClient = require('aws-sdk/clients/dynamodb').DocumentClient
 const dynamodb = new DocumentClient()
 const middy = require('@middy/core')
 const ssm = require('@middy/ssm')
-const { serviceName, stage } = process.env
+const { serviceName, stage, paramStore } = process.env
 
 const getRestaurants = async (count, tableName) => {
+  console.log('paramStore is', paramStore)
   console.log(`fetching ${count} restaurants from ${tableName}...`)
   const req = {
     TableName: tableName,
@@ -32,7 +33,7 @@ module.exports.handler = middy(async (event, context) => {
   cacheExpiry: 1 * 60 * 1000, // 1 mins
   setToContext: true,
   fetchData: {
-    config: `/${serviceName}/${stage}/get-restaurants/config`,
+    config: `/${serviceName}/${paramStore}/get-restaurants/config`,
     tableName: `/${serviceName}/${stage}/restaurants_table`
   }
 }))

@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk')
 AWS.config.region = 'us-east-1'
 const dynamodb = new AWS.DynamoDB.DocumentClient()
-require('dotenv').config()
+const config = require('dotenv').config()
 
 const restaurants = [
   {
@@ -51,10 +51,12 @@ const putReqs = restaurants.map(x => ({
     Item: x
   }
 }))
-
+console.log(process.env.restaurants_table)
+console.log(process.env.stage)
+console.log(config.parsed.restaurants_table)
 const req = {
   RequestItems: {
-    [process.env.restaurants_table]: putReqs
+    [config.parsed.restaurants_table]: putReqs
   }
 }
 dynamodb.batchWrite(req).promise()

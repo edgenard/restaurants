@@ -35,11 +35,11 @@ jobs:
 
       # this provisions a temporary stage called 'ci-dev'
       - name: deploy temp environment
-        run: npx sls deploy -s ci-dev
+        run: npx sls deploy -s ci-dev --params="paramStore=dev"
 
       # this generates the .env file for the 'ci-dev' stage
       - name: export env
-        run: npx sls export-env --all -s ci-dev
+        run: npx sls export-env --all -s ci-dev --params="paramStore=dev"
 
       # this runs the integration test against the 'ci-dev' stage
       - name: run integration test

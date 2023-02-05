@@ -6,7 +6,7 @@ const ssm = require('@middy/ssm')
 const DocumentClient = require('aws-sdk/clients/dynamodb').DocumentClient
 const dynamodb = new DocumentClient()
 
-const { serviceName, stage } = process.env
+const { serviceName, stage, paramStore } = process.env
 
 const findRestaurantsByTheme = async (theme, count, tableName) => {
   console.log(`finding (up to ${count}) restaurants with the theme ${theme}...`)
@@ -44,9 +44,9 @@ module.exports.handler = middy(
   cacheExpiry: 1 * 60 * 1000, // 1 mins
   setToContext: true,
   fetchData: {
-    config: `/${serviceName}/${stage}/search-restaurants/config`,
+    config: `/${serviceName}/${paramStore}/search-restaurants/config`,
     tableName: `/${serviceName}/${stage}/restaurants_table`,
-    secretString: `/${serviceName}/${stage}/search-restaurants/secretString`
+    secretString: `/${serviceName}/${paramStore}/search-restaurants/secretString`
   }
 }))
 
