@@ -15,7 +15,7 @@ const viaHandler = async (event, functionName) => {
     'headers.content-type',
     'application/json'
   )
-  if (response.body && contentType === 'application/json') {
+  if (_.get(response, 'body') && contentType === 'application/json') {
     response.body = JSON.parse(response.body)
   }
   return response
@@ -54,7 +54,10 @@ const viaHttp = async (relPath, method, opts) => {
 
   try {
     const httpReq = http.request({
-      method, url, headers, data
+      method,
+      url,
+      headers,
+      data
     })
 
     const res = await httpReq
@@ -116,9 +119,18 @@ const weInvokePlaceOrder = async (user, restaurantName) => {
   }
 }
 
+const WeInvokeNotifyRestaurant = async (event) => {
+  if (mode === 'handler') {
+    await viaHandler(event, 'notify-restaurant')
+  } else {
+    throw new Error('not supported')
+  }
+}
+
 module.exports = {
   we_invoke_get_index: weInvokeGetIndex,
   we_invoke_get_restaurants: weInvokeGetRestaurants,
   we_invoke_search_restaurants: weInvokeSearchRestaurants,
-  we_invoke_place_order: weInvokePlaceOrder
+  we_invoke_place_order: weInvokePlaceOrder,
+  we_invoke_notify_restaurant: WeInvokeNotifyRestaurant
 }
