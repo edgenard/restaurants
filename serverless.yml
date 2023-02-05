@@ -325,6 +325,42 @@ resources:
         Name: order_events_${sls:stage}_${self:custom.name}
     RestaurantNotificationTopic:
       Type: AWS::SNS::Topic
+    Conditions:
+      IsE2eTest:
+        Fn::Equals:
+          - ${sls:stage}
+          - ci-dev
+    E2eTestQueue:
+      Type: AWS::SQS::Queue
+      Condition: IsE2eTest
+      Properties:
+        MessageRetentionPeriod: 60
+        VisibilityTimeout: 1
+    E2eTestQueuePolicy:
+      Type: AWS::SQS::QueuePolicy
+      Condition: IsE2eTest
+      Properties:
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            Effect: Allow
+            Principal: "*"
+            Action: SQS:SendMessage
+            Resource: !GetAtt E2eTestQueue.Arn
+            Condition:
+              ArnEquals:
+                aws:SourceArn: !Ref RestaurantNotificationTopic
+        Queues:
+          - !Ref E2eTestQueue
+    E2eTestSnsSubscription:
+      Type: AWS::SNS::Subscription
+      Condition: isE2eTest
+      Properties:
+        Protocol: sqs
+        TopicArn: !Ref RestaurantNotificationTopic
+        Endpoint: !GetAtt E2eTestQueue.Arn
+        RawMessageDelivery: false
+        Region: !Ref AWS::Region
   Outputs:
     RestaurantsTableName:
       Value: !Ref RestaurantsTable
@@ -342,6 +378,9 @@ resources:
       Value: !GetAtt RestaurantNotificationTopic.TopicName
     RestaurantNotificationTopicArn:
       Value: !Ref RestaurantNotificationTopic
+    E2eTestQueueUrl:
+      Condition: IsE2eTest
+      Value: !Ref E2eTestQueue
 
 
 plugins:
