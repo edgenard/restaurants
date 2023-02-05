@@ -305,6 +305,8 @@ resources:
       Type: AWS::Events::EventBus
       Properties:
         Name: order_events_${sls:stage}_${self:custom.name}
+    RestaurantNotificationTopic:
+      Type: AWS::SNS::Topic
   Outputs:
     RestaurantsTableName:
       Value: !Ref RestaurantsTable
@@ -318,6 +320,10 @@ resources:
       Value: !Ref ServerCognitoUserPoolClient
     EventBusName:
       Value: !Ref EventBus
+    RestaurantNotificationTopicName:
+      Value: !GetAtt RestaurantNotificationTopic.TopicName
+    RestaurantNotificationTopicArn:
+      Value: !Ref RestaurantNotificationTopic
 
 
 plugins:
