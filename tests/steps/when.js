@@ -132,7 +132,7 @@ const weInvokePlaceOrder = async (user, restaurantName) => {
   }
 }
 
-const WeInvokeNotifyRestaurant = async (event) => {
+const weInvokeNotifyRestaurant = async (event) => {
   if (mode === 'handler') {
     await viaHandler(event, 'notify-restaurant')
   } else {
@@ -146,5 +146,5 @@ module.exports = {
   we_invoke_get_restaurants: weInvokeGetRestaurants,
   we_invoke_search_restaurants: weInvokeSearchRestaurants,
   we_invoke_place_order: weInvokePlaceOrder,
-  we_invoke_notify_restaurant: WeInvokeNotifyRestaurant
+  we_invoke_notify_restaurant: weInvokeNotifyRestaurant
 }
