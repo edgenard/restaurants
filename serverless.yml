@@ -243,6 +243,11 @@ functions:
       restaurant_notification_topic: !Ref RestaurantNotificationTopic
 
 resources:
+  Conditions:
+    IsE2eTest:
+      Fn::Equals:
+        - ${sls:stage}
+        - ci-dev
   Resources:
     RestaurantsTable:
       Type: AWS::DynamoDB::Table
@@ -325,11 +330,6 @@ resources:
         Name: order_events_${sls:stage}_${self:custom.name}
     RestaurantNotificationTopic:
       Type: AWS::SNS::Topic
-    Conditions:
-      IsE2eTest:
-        Fn::Equals:
-          - ${sls:stage}
-          - ci-dev
     E2eTestQueue:
       Type: AWS::SQS::Queue
       Condition: IsE2eTest
@@ -344,7 +344,7 @@ resources:
           Version: "2012-10-17"
           Statement:
             Effect: Allow
-            Principal: "*"
+            Principal: "*" # QUESTION: Why * here?
             Action: SQS:SendMessage
             Resource: !GetAtt E2eTestQueue.Arn
             Condition:
@@ -354,7 +354,7 @@ resources:
           - !Ref E2eTestQueue
     E2eTestSnsSubscription:
       Type: AWS::SNS::Subscription
-      Condition: isE2eTest
+      Condition: IsE2eTest
       Properties:
         Protocol: sqs
         TopicArn: !Ref RestaurantNotificationTopic
