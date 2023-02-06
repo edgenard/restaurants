@@ -121,6 +121,13 @@ custom:
   name: emmanuelgenard
   export-env:
     overwrite: true
+  exportOutputs:
+    include:
+      - E2eTestQueueUrl
+      - CognitoUserPoolServerClientId
+      - RestaurantNotificationTopicName
+    output:
+      file: ./.env-outputs
   apiGatewayThrottling:
     maxRequestsPerSecond: 1000
     maxConcurrentRequests: 500
@@ -387,3 +394,4 @@ plugins:
   - serverless-export-env
   - serverless-api-gateway-throttling
   - serverless-plugin-aws-alerts
+  - serverless-export-outputs
