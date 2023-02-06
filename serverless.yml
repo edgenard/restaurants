@@ -127,7 +127,7 @@ custom:
       - CognitoUserPoolServerClientId
       - RestaurantNotificationTopicName
     output:
-      file: ./.env-outputs
+      file: ./.env.outputs
   apiGatewayThrottling:
     maxRequestsPerSecond: 1000
     maxConcurrentRequests: 500
