@@ -2,7 +2,7 @@ const { promisify } = require('util')
 const awscred = require('awscred')
 const dotenv = require('dotenv')
 dotenv.config()
-dotenv.config({ path: '.env-outputs' })
+dotenv.config({ path: '.env.outputs' })
 
 let initialized = false
 
