@@ -255,6 +255,7 @@ resources:
       Fn::Equals:
         - ${sls:stage}
         - ci-dev
+        - local
   Resources:
     RestaurantsTable:
       Type: AWS::DynamoDB::Table
