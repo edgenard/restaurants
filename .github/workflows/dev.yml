@@ -41,6 +41,8 @@ jobs:
       - name: export env
         run: npx sls export-env --all -s ci-dev --param="paramStore=dev"
 
+      - name: seed database for tests
+        run: npm run seed
       # this runs the integration test against the 'ci-dev' stage
       - name: run integration test
         run: npx cross-env TEST_MODE=handler jest
