@@ -1,8 +1,8 @@
-const NodeEnvironment = require('jest-environment-node').TestEnvironment
-const AWS = require('aws-sdk')
+import AWS from 'aws-sdk'
+import dotEnv from 'dotenv'
 AWS.config.region = 'us-east-1'
 const dynamodb = new AWS.DynamoDB.DocumentClient()
-require('dotenv').config()
+dotEnv.config({ override: true })
 
 const restaurants = [
   {
@@ -67,54 +67,35 @@ const req = (requestType) => ({
   }
 })
 
-class SeedTestData extends NodeEnvironment {
-  constructor (config, context) {
-    super(config, context)
-    this.testPath = context.testPath
-    this.docblockPragmas = context.docblockPragmas
-  }
+const addDataToTable = async () => {
+  const { UnprocessedItems = [] } = await dynamodb.batchWrite(req(putReqs)).promise().catch(error => {
+    console.log('Error Writing to DynamoDB')
+    console.error(error)
+  })
 
-  async setup () {
-    const { UnprocessedItems = [] } = await dynamodb.batchWrite(req(putReqs)).promise().catch(error => {
-      console.log('Error Writing to DynamoDB')
-      console.error(error)
-    })
-    await super.setup()
-
-    if (Object.keys(UnprocessedItems).length === 0) {
-      console.log('Successfully Wrote Seed Data')
-      process.env.seeded = true
-    } else {
-      console.log('Some Items were not written')
-      console.log(UnprocessedItems)
-      process.env.seeded = false
-    }
-  }
-
-  async teardown () {
-    const { UnprocessedItems = [] } = await dynamodb.batchWrite(req(deleteReqs)).promise().catch(error => {
-      console.log('Error Deleting from DynamoDB')
-      console.error(error)
-    })
-    await super.teardown()
-
-    if (Object.keys(UnprocessedItems).length === 0) {
-      console.log('Successfully Deleted Seed Data')
-    } else {
-      console.log('Some Items were not deleted')
-      console.log(UnprocessedItems)
-    }
-  }
-
-  getVmContext () {
-    return super.getVmContext()
-  }
-
-  async handleTestEvent (event, state) {
-    if (event.name === 'test_start') {
-      // ...
-    }
+  if (Object.keys(UnprocessedItems).length === 0) {
+    console.log('Successfully Wrote Seed Data')
+    process.env.seeded = true
+  } else {
+    console.log('Some Items were not written')
+    console.log(UnprocessedItems)
+    process.env.seeded = false
   }
 }
 
-module.exports = SeedTestData
+const deleteDataFromTable = async () => {
+  const { UnprocessedItems = [] } = await dynamodb.batchWrite(req(deleteReqs)).promise().catch(error => {
+    console.log('Error Deleting from DynamoDB')
+    console.error(error)
+  })
+
+  if (Object.keys(UnprocessedItems).length === 0) {
+    console.log('Successfully Deleted Seed Data')
+  } else {
+    console.log('Some Items were not deleted')
+    console.log(UnprocessedItems)
+  }
+}
+
+await deleteDataFromTable()
+await addDataToTable()

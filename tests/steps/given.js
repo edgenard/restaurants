@@ -8,6 +8,7 @@ const randomPassword = () => `${chance.string({ length: 8 })}B!gM0uth`
 const auAuthenticatedUser = async () => {
   const cognito = new AWS.CognitoIdentityServiceProvider()
 
+  console.log(process.env.cognito_user_pool_id)
   const userpoolId = process.env.cognito_user_pool_id
   const clientId = process.env.CognitoUserPoolServerClientId
 
@@ -73,7 +74,7 @@ const auAuthenticatedUser = async () => {
 */
 const dynamicConfigurations = async () => {
   const ssm = new AWS.SSM()
-  const parameterPath = `/${process.env.serviceName}/${process.env.stage}/`
+  const parameterPath = `/${process.env.serviceName}/${process.env.paramStore}/`
   const params = await ssm.getParametersByPath({ Path: parameterPath, Recursive: true }).promise()
 
   return params.Parameters.reduce((acc, el) => {

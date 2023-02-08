@@ -1,6 +1,3 @@
-/**
- * @jest-environment ./tests/test-data/seeds.js
- */
 const cheerio = require('cheerio')
 const when = require('../steps/when')
 const given = require('../steps/given')
