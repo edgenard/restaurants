@@ -347,13 +347,20 @@ resources:
         PolicyDocument:
           Version: "2012-10-17"
           Statement:
-            Effect: Allow
-            Principal: "*" # QUESTION: Why * here?
-            Action: SQS:SendMessage
-            Resource: !GetAtt E2eTestQueue.Arn
-            Condition:
-              ArnEquals:
-                aws:SourceArn: !Ref RestaurantNotificationTopic
+            - Effect: Allow
+              Principal: "*" # QUESTION: Why * here?
+              Action: SQS:SendMessage
+              Resource: !GetAtt E2eTestQueue.Arn
+              Condition:
+                ArnEquals:
+                  aws:SourceArn: !Ref RestaurantNotificationTopic
+            - Effect: Allow
+              Principal: "*"
+              Action: SQS:SendMessage
+              Resource: !GetAtt E2eTestQueue.Arn
+              Condition:
+                ArnEquals:
+                  aws:SourceArn: !GetAtt E2eTestEventBridgeRule.Arn
         Queues:
           - !Ref E2eTestQueue
     E2eTestSnsSubscription:
@@ -365,6 +372,31 @@ resources:
         Endpoint: !GetAtt E2eTestQueue.Arn
         RawMessageDelivery: false
         Region: !Ref AWS::Region
+    E2eTestEventBridgeRule:
+      Type: AWS::Events::Rule
+      Condition: IsE2eTest
+      Properties:
+        EventBusName: !Ref EventBus
+        EventPattern:
+          source: ["big-mouth"]
+        State: ENABLED
+        Targets:
+          - Arn: !GetAtt E2eTestQueue.Arn
+            Id: e2eTestQueue
+            InputTransformer:
+              InputPathsMap:
+                source: "$.source"
+                detailType: "$.detail-type"
+                detail: "$.detail"
+              InputTemplate: !Sub >
+                {
+                  "event": {
+                    "source": <source>,
+                    "detail-type": <detailType>,
+                    "detail": <detail>
+                  },
+                  "eventBusName": "${EventBus}"
+                }
   Outputs:
     RestaurantsTableName:
       Value: !Ref RestaurantsTable
