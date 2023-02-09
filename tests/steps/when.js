@@ -7,6 +7,8 @@ const mode = process.env.TEST_MODE
 const EventBridge = require('aws-sdk/clients/eventbridge')
 
 const viaEventBridge = async (busName, source, detailType, detail) => {
+  console.log('adding messages to eventbridge')
+  console.log(JSON.stringify(detail))
   const eventBridge = new EventBridge()
   await eventBridge.putEvents({
     Entries: [{
@@ -137,7 +139,7 @@ const weInvokeNotifyRestaurant = async (event) => {
     await viaHandler(event, 'notify-restaurant')
   } else {
     const busName = process.env.bus_name
-    await viaEventBridge(busName, event.source, event['detail-type'])
+    await viaEventBridge(busName, event.source, event['detail-type'], event.detail)
   }
 }
 
