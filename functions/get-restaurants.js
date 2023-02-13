@@ -2,7 +2,7 @@ const DocumentClient = require('aws-sdk/clients/dynamodb').DocumentClient
 const dynamodb = new DocumentClient()
 const middy = require('@middy/core')
 const ssm = require('@middy/ssm')
-const { serviceName, stage, paramStore } = process.env
+const { serviceName, paramStore, restaurants_table } = process.env
 
 const getRestaurants = async (count, tableName) => {
   console.log('paramStore is', paramStore)
@@ -20,7 +20,7 @@ const getRestaurants = async (count, tableName) => {
 module.exports.handler = middy(async (event, context) => {
   const restaurants = await getRestaurants(
     context.config.defaultResults,
-    context.tableName
+    restaurants_table
   )
   const response = {
     statusCode: 200,
@@ -28,12 +28,13 @@ module.exports.handler = middy(async (event, context) => {
   }
 
   return response
-}).use(ssm({
-  cache: true,
-  cacheExpiry: 1 * 60 * 1000, // 1 mins
-  setToContext: true,
-  fetchData: {
-    config: `/${serviceName}/${paramStore}/get-restaurants/config`,
-    tableName: `/${serviceName}/${stage}/restaurants_table`
-  }
-}))
+}).use(
+  ssm({
+    cache: true,
+    cacheExpiry: 1 * 60 * 1000, // 1 mins
+    setToContext: true,
+    fetchData: {
+      config: `/${serviceName}/${paramStore}/get-restaurants/config`
+    }
+  })
+)
