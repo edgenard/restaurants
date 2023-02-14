@@ -2,25 +2,25 @@ const DocumentClient = require('aws-sdk/clients/dynamodb').DocumentClient
 const dynamodb = new DocumentClient()
 const middy = require('@middy/core')
 const ssm = require('@middy/ssm')
-const { serviceName, paramStore, restaurants_table } = process.env
+const { serviceName, paramStore, restaurants_table: tableName } = process.env
+const Log = require('@dazn/lambda-powertools-logger')
 
 const getRestaurants = async (count, tableName) => {
-  console.log('paramStore is', paramStore)
-  console.log(`fetching ${count} restaurants from ${tableName}...`)
+  Log.debug(`fetching ${count} restaurants from ${tableName}...`)
   const req = {
     TableName: tableName,
     Limit: count
   }
 
   const resp = await dynamodb.scan(req).promise()
-  console.log(`found ${resp.Items.length} restaurants`)
+  Log.debug('restaurants found', { count: resp.Items.length })
   return resp.Items
 }
 
 module.exports.handler = middy(async (event, context) => {
   const restaurants = await getRestaurants(
     context.config.defaultResults,
-    restaurants_table
+    tableName
   )
   const response = {
     statusCode: 200,

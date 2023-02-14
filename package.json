@@ -33,6 +33,7 @@
     "standard": "^17.0.0"
   },
   "dependencies": {
+    "@dazn/lambda-powertools-logger": "^1.28.1",
     "@middy/core": "^3.1.0",
     "@middy/ssm": "^3.1.0",
     "@middy/validator": "^3.1.0",

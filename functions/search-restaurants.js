@@ -2,14 +2,14 @@
 // const axios = require('axios')
 const middy = require('@middy/core')
 const ssm = require('@middy/ssm')
-
 const DocumentClient = require('aws-sdk/clients/dynamodb').DocumentClient
 const dynamodb = new DocumentClient()
+const Log = require('@dazn/lambda-powertools-logger')
 
-const { serviceName, stage, paramStore, restaurants_table: restaurantsTableName } = process.env
+const { serviceName, paramStore, restaurants_table: tableName } = process.env
 
 const findRestaurantsByTheme = async (theme, count, tableName) => {
-  console.log(`finding (up to ${count}) restaurants with the theme ${theme}...`)
+  Log.debug('finding restaurants', { count, theme })
   const req = {
     TableName: tableName,
     Limit: count,
@@ -18,7 +18,7 @@ const findRestaurantsByTheme = async (theme, count, tableName) => {
   }
 
   const resp = await dynamodb.scan(req).promise()
-  console.log(`found ${resp.Items.length} restaurants`)
+  Log.debug(`found ${resp.Items.length} restaurants`)
   return resp.Items
 }
 
@@ -28,13 +28,13 @@ module.exports.handler = middy(
     const theme = req.theme
     const defaultResults = context.config.defaultResults
 
-    const restaurants = await findRestaurantsByTheme(theme, defaultResults, restaurantsTableName)
+    const restaurants = await findRestaurantsByTheme(theme, defaultResults, tableName)
     const response = {
       statusCode: 200,
       body: JSON.stringify(restaurants)
     }
 
-    console.log('Secret String', context.secretString)
+    Log.debug({ secretString: context.secretString })
 
     return response
   }

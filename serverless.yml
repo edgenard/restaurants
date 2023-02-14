@@ -142,6 +142,9 @@ custom:
             endpoint: errantwriter+cloudwatchalarm@gmail.com
       alarms:
         - functionErrors
+  logLevel:
+    prod: INFO
+    default: DEBUG
 
 provider:
   name: aws
@@ -153,6 +156,7 @@ provider:
     AWS_PROFILE: production-ready-serverless
     rest_api_url: !Sub https://${ApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${sls:stage}
     cognito_server_client_id: !Ref ServerCognitoUserPoolClient
+    LOG_LEVEL: ${self:custom.logLevel.${sls:stage}, self:custom.logLevel.default}
   apiGateway:
     metrics: true
 
