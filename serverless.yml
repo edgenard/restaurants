@@ -144,6 +144,7 @@ custom:
         - functionErrors
   logLevel:
     prod: INFO
+    dev: ERROR
     default: DEBUG
 
 provider:
@@ -157,6 +158,7 @@ provider:
     rest_api_url: !Sub https://${ApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/${sls:stage}
     cognito_server_client_id: !Ref ServerCognitoUserPoolClient
     LOG_LEVEL: ${self:custom.logLevel.${sls:stage}, self:custom.logLevel.default}
+    SAMPLE_DEBUG_LOG_RATE: 0.1
   apiGateway:
     metrics: true
 
