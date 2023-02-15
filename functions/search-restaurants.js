@@ -1,10 +1,10 @@
 // const { metricScope, Unit } = require('aws-embedded-metrics')
 // const axios = require('axios')
-const middy = require('@middy/core')
 const ssm = require('@middy/ssm')
 const DocumentClient = require('aws-sdk/clients/dynamodb').DocumentClient
 const dynamodb = new DocumentClient()
 const Log = require('@dazn/lambda-powertools-logger')
+const wrap = require('@dazn/lambda-powertools-pattern-basic')
 
 const { serviceName, paramStore, restaurants_table: tableName } = process.env
 
@@ -22,7 +22,7 @@ const findRestaurantsByTheme = async (theme, count, tableName) => {
   return resp.Items
 }
 
-module.exports.handler = middy(
+module.exports.handler = wrap(
   async (event, context) => {
     const req = JSON.parse(event.body)
     const theme = req.theme
