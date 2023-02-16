@@ -146,6 +146,8 @@ custom:
     prod: INFO
     dev: ERROR
     default: DEBUG
+  serverless-iam-roles-per-function:
+    defaultInherit: true
 
 provider:
   name: aws
@@ -161,6 +163,17 @@ provider:
     SAMPLE_DEBUG_LOG_RATE: 0.1
   apiGateway:
     metrics: true
+  tracing:
+    apiGateway: true
+    lambda: true
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - "xray:PutTraceSegments"
+            - "xray:PutTelemetryRecords"
+          Resource: *
 
 functions:
   get-index:
