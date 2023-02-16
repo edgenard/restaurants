@@ -173,7 +173,7 @@ provider:
           Action:
             - "xray:PutTraceSegments"
             - "xray:PutTelemetryRecords"
-          Resource: *
+          Resource: '*'
 
 functions:
   get-index:
