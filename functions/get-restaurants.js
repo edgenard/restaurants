@@ -1,5 +1,8 @@
 const DocumentClient = require('aws-sdk/clients/dynamodb').DocumentClient
 const dynamodb = new DocumentClient()
+const XRay = require('aws-xray-sdk-core')
+XRay.captureAWSClient(dynamodb.service)
+
 const ssm = require('@middy/ssm')
 const { serviceName, paramStore, restaurants_table: tableName } = process.env
 const Log = require('@dazn/lambda-powertools-logger')

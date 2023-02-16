@@ -1,7 +1,10 @@
 const EventBridge = require('aws-sdk/clients/eventbridge')
-const eventBridge = new EventBridge()
 const SNS = require('aws-sdk/clients/sns')
-const sns = new SNS()
+const XRay = require('aws-xray-sdk-core')
+
+const eventBridge = XRay.captureAWSClient(new EventBridge())
+const sns = XRay.captureAWSClient(new SNS())
+
 const Log = require('@dazn/lambda-powertools-logger')
 const wrap = require('@dazn/lambda-powertools-pattern-basic')
 
