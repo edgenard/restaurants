@@ -161,6 +161,7 @@ provider:
     cognito_server_client_id: !Ref ServerCognitoUserPoolClient
     LOG_LEVEL: ${self:custom.logLevel.${sls:stage}, self:custom.logLevel.default}
     SAMPLE_DEBUG_LOG_RATE: 0.1
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
   apiGateway:
     metrics: true
   tracing:
